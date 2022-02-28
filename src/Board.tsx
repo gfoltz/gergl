@@ -1,7 +1,7 @@
 import { GerglState } from "./GerglState";
 import styled from "@emotion/styled";
 import React from 'react';
-
+import { Color } from './Color';
 
 const Container = styled.div({
   display: 'flex',
@@ -24,9 +24,9 @@ const Row = styled.div((props: any) => ({
 
 const Square = styled.div((props: { correctness?: string }) => {
   const background = props?.correctness === 'correct'
-    ? 'green'
-    : props?.correctness === 'wrongPlace'
-      ? 'orange'
+    ? Color.correct
+    : props?.correctness === 'present'
+      ? Color.present
       : 'white';
 
   return {
@@ -73,7 +73,7 @@ function BoardRow({ guess, secret, isFinal }: { guess: string, secret: string, i
   })}</Row>
 }
 
-type ScoredLetter = { letter: string, correctness?: 'correct' | 'wrongPlace' };
+type ScoredLetter = { letter: string, correctness?: 'correct' | 'present' };
 function getScoredLetters(guess: string, secret: string, isFinal: boolean): ScoredLetter[] {
   const secretLetters = secret.split('') as (string | null)[];
   const guessLetters = guess.split('');
@@ -86,7 +86,7 @@ function getScoredLetters(guess: string, secret: string, isFinal: boolean): Scor
       const secretIndex = secretLetters.indexOf(gl);
       if (secretIndex !== -1) {
         secretLetters[secretIndex] = null;
-        return { letter: gl, correctness: 'wrongPlace' };
+        return { letter: gl, correctness: 'present' };
       }
       return { letter: gl };
     })
