@@ -1,4 +1,7 @@
 import React, { useContext, useState } from "react"
+import moment from "moment-timezone";
+import hs from "hash-sum";
+import { SecretWords } from './Dictionary';
 
 export type GerglState = {
   secret: string,
@@ -23,7 +26,7 @@ export interface GerglStateMachine {
 
 export function newGerglState(): GerglState {
   return {
-    secret: "GERGL",
+    secret: getSecretWord(),
     guesses: [],
     currentGuess: '',
   }
@@ -32,6 +35,13 @@ export function newGerglState(): GerglState {
 export function useGerglStateMachine(): GerglStateMachine {
   const [state, setState] = useState<GerglState>(newGerglState)
   return newGerglStateMachine(state, setState);
+}
+
+function getSecretWord() {
+  const todaysNumber = Number(`0x${hs(moment().startOf('day').format('YYYY-MM-DD'))}`)
+  const todaysWord = SecretWords[todaysNumber % SecretWords.length];
+  console.log(`Todays Word: ${todaysWord}`);
+  return todaysWord.toLocaleUpperCase();
 }
 
 function newGerglStateMachine(state: GerglState, setState: SetStateFn) {
