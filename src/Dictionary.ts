@@ -12952,3 +12952,10 @@ export const AllowableWords = [
 ];
 
 export const AllWords = [...SecretWords, ...AllowableWords];
+
+export const SecretWordsReverse = SecretWords.map(w => reverseWord(w));
+export const AllWordsReverse = AllWords.map(w => reverseWord(w));
+
+function reverseWord(w: string): string {
+  return w.split('').reverse().join('');
+}

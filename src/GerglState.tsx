@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react"
 import moment from "moment-timezone";
 import hs from "hash-sum";
-import { SecretWords, AllWords } from './Dictionary';
+import { SecretWordsReverse, AllWordsReverse } from './Dictionary';
 
 export type GerglState = {
   secret: string,
@@ -39,7 +39,7 @@ export function useGerglStateMachine(): GerglStateMachine {
 
 function getSecretWord() {
   const todaysNumber = Number(`0x${hs(moment().startOf('day').format('YYYY-MM-DD'))}`)
-  const todaysWord = SecretWords[todaysNumber % SecretWords.length];
+  const todaysWord = SecretWordsReverse[todaysNumber % SecretWordsReverse.length];
   console.log(`Todays Word: ${todaysWord}`);
   return todaysWord.toLocaleUpperCase();
 }
@@ -92,8 +92,7 @@ function makeGuessMutation(setState: SetStateFn) {
       if (state.currentGuess.length !== 5 || isGameComplete(state)) {
         return state;
       }
-      if (AllWords.indexOf(state.currentGuess.toLocaleLowerCase()) === -1) {
-        console.log(`Bad Guess: ${state.currentGuess.toLocaleLowerCase()}`);
+      if (AllWordsReverse.indexOf(state.currentGuess.toLocaleLowerCase()) === -1) {
         return state;
       }
       return {
