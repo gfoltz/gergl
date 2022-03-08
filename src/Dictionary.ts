@@ -12950,3 +12950,5 @@ export const AllowableWords = [
     "zymes",
     "zymic"
 ];
+
+export const AllWords = [...SecretWords, ...AllowableWords];

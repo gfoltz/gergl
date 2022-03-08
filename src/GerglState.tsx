@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react"
 import moment from "moment-timezone";
 import hs from "hash-sum";
-import { SecretWords } from './Dictionary';
+import { SecretWords, AllWords } from './Dictionary';
 
 export type GerglState = {
   secret: string,
@@ -90,6 +90,10 @@ function makeGuessMutation(setState: SetStateFn) {
   return (state: GerglState): GerglState => {
     return mutation(setState, () => {
       if (state.currentGuess.length !== 5 || isGameComplete(state)) {
+        return state;
+      }
+      if (AllWords.indexOf(state.currentGuess.toLocaleLowerCase()) === -1) {
+        console.log(`Bad Guess: ${state.currentGuess.toLocaleLowerCase()}`);
         return state;
       }
       return {
