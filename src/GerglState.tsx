@@ -7,6 +7,7 @@ export type GerglState = {
   secret: string,
   guesses: string[],
   currentGuess: string,
+  toast: string | null,
 }
 type SetStateFn = React.Dispatch<React.SetStateAction<GerglState>>;
 
@@ -29,6 +30,7 @@ export function newGerglState(): GerglState {
     secret: getSecretWord(),
     guesses: [],
     currentGuess: '',
+    toast: null,
   }
 }
 
@@ -51,10 +53,20 @@ function newGerglStateMachine(state: GerglState, setState: SetStateFn) {
       addLetter: addLetterMutation(setState),
       removeLetter: removeLetterMutation(setState),
       makeGuess: makeGuessMutation(setState),
+      setToast: makeSetToastMutation(setState),
     },
     selectors: {
       isGameComplete,
     }
+  }
+}
+
+function makeSetToastMutation(setState: setStateFn) {
+  return (state: GerglState, toast: string | null): GerglState => {
+    return mutation(setState, () => ({
+      ...state,
+      toast,
+    }));
   }
 }
 
@@ -93,7 +105,7 @@ function makeGuessMutation(setState: SetStateFn) {
         return state;
       }
       if (AllWordsReverse.indexOf(state.currentGuess.toLocaleLowerCase()) === -1) {
-        return state;
+        return {...state, toast: 'Not in word list'};
       }
       return {
         ...state,

@@ -4,6 +4,7 @@ import './App.css';
 import { GerglStateContext, useGerglStateMachine } from './GerglState';
 import { Keyboard } from './Keyboard';
 import { Board } from './Board';
+import { Toast } from './Toast';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 
 const Container = styled.div((props: any) => ({
@@ -47,7 +48,8 @@ export function GerglApp(props: any) {
         GERGL
       </PageHeader>
       <Container>
-        <Board state={state} />
+        <Toast />
+        <Board />
         <Keyboard />
       </Container>
     </GerglStateContext.Provider>

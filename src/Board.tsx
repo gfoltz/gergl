@@ -1,4 +1,4 @@
-import { GerglState } from "./GerglState";
+import { useGerglContext } from "./GerglState";
 import styled from "@emotion/styled";
 import React from 'react';
 import { Color } from './Color';
@@ -47,7 +47,8 @@ const Square = styled.div((props: { correctness?: string }) => {
   };
 });
 
-export function Board({ state }: { state: GerglState }) {
+export function Board() {
+  const { mutations, state } = useGerglContext();
   return (
     <Container>
       <Grid>
