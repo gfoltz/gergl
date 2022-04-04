@@ -3,12 +3,16 @@ import moment from "moment-timezone";
 import hs from "hash-sum";
 import { SecretWordsReverse, AllWordsReverse } from './Dictionary';
 
-export type GerglState = {
+export type GerglState = PersistedGerglState & {
   secret: string,
-  guesses: string[],
-  currentGuess: string,
   toast: string | null,
 }
+
+type PersistedGerglState = {
+  guesses: string[],
+  currentGuess: string,
+}
+
 type SetStateFn = React.Dispatch<React.SetStateAction<GerglState>>;
 
 export interface GerglStateMachine {
@@ -28,9 +32,8 @@ export interface GerglStateMachine {
 export function newGerglState(): GerglState {
   return {
     secret: getSecretWord(),
-    guesses: [],
-    currentGuess: '',
     toast: null,
+    ...loadPersistedState(),
   }
 }
 
@@ -124,6 +127,7 @@ function isGameComplete(state: GerglState) {
 function mutation(setState: SetStateFn, mutator: () => GerglState) {
   const newState = mutator();
   setState(newState);
+  persistState(newState);
   return newState;
 }
 
@@ -133,4 +137,16 @@ export const GerglStateContext = React.createContext<
 
 export function useGerglContext() {
   return useContext(GerglStateContext);
+}
+
+function persistState(state: PersistedGerglState) {
+  localStorage.setItem(localStorageKey(), JSON.stringify({...state}));
+}
+
+function loadPersistedState(): PersistedGerglState {
+  return JSON.parse(localStorage.getItem(localStorageKey()))
+}
+
+function localStorageKey() {
+  return `game:${moment().startOf('day').format('YYYY-MM-DD')}`;
 }
