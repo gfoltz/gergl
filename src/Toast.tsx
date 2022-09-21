@@ -23,7 +23,7 @@ export function Toast() {
     return null;
   }
   useEffect(() => {
-    setTimeout(() => mutations.setToast(state, null), 1000)
+    setTimeout(() => mutations.setToast(state, null), 5000)
   }, [mutations])
   return (<Container>{state.toast}</Container>);
 }

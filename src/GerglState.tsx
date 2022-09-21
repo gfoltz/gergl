@@ -33,6 +33,8 @@ export function newGerglState(): GerglState {
   return {
     secret: getSecretWord(),
     toast: null,
+    currentGuess: '',
+    guesses: [],
     ...loadPersistedState(),
   }
 }
@@ -113,12 +115,33 @@ function makeGuessMutation(setState: SetStateFn) {
       return {
         ...state,
         guesses: [...state.guesses, state.currentGuess],
+        toast: getEndWord(state),
         currentGuess: '',
       }
     });
   };
 }
 
+function getEndWord(state: GerglState) {
+  const numGuesses = state.guesses.length;
+  if (state.currentGuess !== state.secret && numGuesses < 5) {
+    return null;
+  } else if (state.currenGuess !== state.secret) {
+    return state.secret;
+  } else if (numGuesses === 0) {
+    return 'Genius';
+  } else if (numGuesses === 1) {
+    return 'Magnificent'
+  } else if (numGuesses === 2) {
+    return 'Impressive'
+  } else if (numGuesses === 3) {
+    return 'Splendid'
+  } else if (numGuesses === 4) {
+    return 'Great'
+  } else if (numGuesses === 5) {
+    return 'Phew'
+  }
+}
 function isGameComplete(state: GerglState) {
   return (state.guesses.length !== 0 && (state.guesses[state.guesses.length - 1] === state.secret))
     || (state.guesses.length >= 6);
